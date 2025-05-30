@@ -28,6 +28,13 @@ var minWindow = function (s, t) {
   const sChars = s.split("");
   const tChars = t.split("");
 
+  if (tChars.length > sChars.length) return "";
+
+  if (tChars.length === 1) return sChars.includes(tChars[0]) ? tChars[0] : "";
+
+  if (hasAllCharacters({ substringArr: sChars, tChars }) && hasAllCharacters({ substringArr: tChars, tChars: sChars }))
+    return sChars.join("");
+
   while (!tChars.includes(sChars[l])) {
     l++;
     r++;
@@ -37,38 +44,52 @@ var minWindow = function (s, t) {
 
   let substringArr = [sChars[l]];
 
-  r++;
+  if (sChars.length === 1) return sChars[0] === t ? t : "";
+
+  if (sChars.length > 2) r++;
 
   const validSubstrings = [];
+  const rLimit = sChars.length - 1 || 1;
 
   // O(n²)
-  while (r <= sChars.length - 1) {
-    if (tChars.includes(sChars[r])) {
-      substringArr.push(sChars[r]);
+  while (r <= rLimit + 1) {
+    const tCharsIdx = sChars.length !== 1 ? r : 0;
 
-      if (hasAllCharacters({ substringArr, tChars })) {
-        validSubstrings.push(sChars.slice(l, r + 1).join(""));
+    if (tChars.includes(sChars[tCharsIdx])) {
+      if (sChars.length !== 1) substringArr.push(sChars[tCharsIdx]);
+    }
 
+    if (hasAllCharacters({ substringArr, tChars })) {
+      const tCharsIdx = r + 1;
+
+      const validSubstring = sChars.slice(l, tCharsIdx).join("") || sChars[tCharsIdx];
+
+      validSubstrings.push(validSubstring);
+
+      l++;
+
+      while (!tChars.includes(sChars[l])) {
         l++;
 
-        while (!tChars.includes(sChars[l])) {
-          l++;
-
-          if (l >= sChars.length) return validSubstrings.sort((a, b) => a.length - b.length)[0] || "";
-        }
-
-        substringArr = [sChars[l]];
+        if (l >= sChars.length) return validSubstrings.sort((a, b) => a.length - b.length)[0] ?? "";
+        // if (l >= sChars.length) return validSubstrings;
       }
+
+      substringArr = [sChars[l]];
+      r = l + 1;
+
+      continue;
     }
 
     r++;
   }
 
-  return validSubstrings.sort((a, b) => a.length - b.length)[0] || "";
+  return validSubstrings.sort((a, b) => a.length - b.length)[0] ?? "";
+  // return validSubstrings;
 };
 
-let s = "BADOBECODEBABNC";
-let t = "BB";
+let s = "abc";
+let t = "ab";
 
 const output = minWindow(s, t);
 
