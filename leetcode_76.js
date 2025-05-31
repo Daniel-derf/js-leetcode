@@ -2,53 +2,55 @@ var minWindow = function (s, t) {
   if (s.length < t.length) return "";
 
   const tMap = {};
-  for (const char of t) {
-    tMap[char] = (tMap[char] || 0) + 1;
-  }
 
-  let left = 0;
-  let right = 0;
-  let need = Object.keys(tMap).length;
+  for (const c of t) tMap[c] = tMap[c] ? tMap[c] + 1 : 1;
+
+  const need = Object.keys(tMap).length;
   let have = 0;
-  const window = {};
 
-  let res = [-1, -1]; // indices
-  let resLen = Infinity;
+  let [minL, minR] = [-1, -1];
+  let minLen = Infinity;
 
-  while (right < s.length) {
-    const c = s[right];
-    window[c] = (window[c] || 0) + 1;
+  const sMap = {};
 
-    if (tMap[c] && window[c] === tMap[c]) {
+  let [l, r] = [0, 0];
+
+  while (r < s.length) {
+    const val = s[r];
+
+    sMap[val] = sMap[val] ? sMap[val] + 1 : 1;
+
+    if (tMap[val] && tMap[val] === sMap[val]) {
       have++;
     }
 
-    // window válida
     while (have === need) {
-      // atualiza menor janela
-      if (right - left + 1 < resLen) {
-        res = [left, right];
-        resLen = right - left + 1;
+      const curLen = r - l + 1;
+
+      if (minLen > curLen) {
+        minL = l;
+        minR = r;
+
+        minLen = curLen;
       }
 
-      // tenta encolher o início da janela
-      const lChar = s[left];
-      window[lChar]--;
-      if (tMap[lChar] && window[lChar] < tMap[lChar]) {
-        have--;
-      }
-      left++;
+      const curVal = s[l];
+
+      sMap[curVal]--;
+
+      if (tMap[curVal] > sMap[curVal]) have--;
+
+      l++;
     }
 
-    right++;
+    r++;
   }
 
-  const [start, end] = res;
-  return resLen === Infinity ? "" : s.slice(start, end + 1);
+  return s.slice(minL, minR + 1) || "";
 };
 
-let s = "abc";
-let t = "ab";
+let s = "ADOBECODEBANC";
+let t = "ABC";
 
 const output = minWindow(s, t);
 
