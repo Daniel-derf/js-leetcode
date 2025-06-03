@@ -1,50 +1,48 @@
 var minWindow = function (s, t) {
-  if (s.length < t.length) return "";
+  if (t.length > s.length) return "";
 
   const tMap = {};
 
-  for (const c of t) tMap[c] = tMap[c] ? tMap[c] + 1 : 1;
+  for (const c of t) {
+    tMap[c] = tMap[c] ? tMap[c] + 1 : 1;
+  }
 
   const need = Object.keys(tMap).length;
   let have = 0;
 
-  let [minL, minR] = [-1, -1];
-  let minLen = Infinity;
-
-  const sMap = {};
+  let minSubstringPointers = [-1, -1];
+  let minSubstringLen = Infinity;
 
   let [l, r] = [0, 0];
 
+  const sMap = {};
+
   while (r < s.length) {
-    const val = s[r];
+    const c = s[r];
+    sMap[c] = sMap[c] ? sMap[c] + 1 : 1;
 
-    sMap[val] = sMap[val] ? sMap[val] + 1 : 1;
-
-    if (tMap[val] && tMap[val] === sMap[val]) {
-      have++;
-    }
+    if (tMap[c] && sMap[c] === tMap[c]) have++;
 
     while (have === need) {
-      const curLen = r - l + 1;
+      const curSubLen = r - l + 1;
 
-      if (minLen > curLen) {
-        minL = l;
-        minR = r;
-
-        minLen = curLen;
+      if (curSubLen < minSubstringLen) {
+        minSubstringLen = curSubLen;
+        minSubstringPointers = [l, r];
       }
 
-      const curVal = s[l];
+      const removedChar = s[l];
 
-      sMap[curVal]--;
-
-      if (tMap[curVal] > sMap[curVal]) have--;
+      sMap[removedChar]--;
+      if (tMap[removedChar] && sMap[removedChar] < tMap[removedChar]) have--;
 
       l++;
     }
 
     r++;
   }
+
+  const [minL, minR] = minSubstringPointers;
 
   return s.slice(minL, minR + 1) || "";
 };
