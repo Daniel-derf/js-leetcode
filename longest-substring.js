@@ -34,3 +34,5 @@ const input = "pwwkew";
 const output = longestSubstring(input);
 
 console.log(output);
+
+// 26 ms

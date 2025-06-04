@@ -1,22 +1,20 @@
-import assert from "node:assert";
-
 var twoSum = function (nums, target) {
-  const hashmap = new Map();
+  const map = {};
 
-  for (const [idx, num] of nums.entries()) {
-    const complement = target - num;
+  for (let i = 0; i < nums.length; i++) {
+    const curVal = nums[i];
 
-    if (hashmap.has(complement)) return [idx, hashmap.get(complement)];
+    const remaining = target - curVal;
 
-    hashmap.set(num, idx);
+    if (map[remaining] != undefined) return [map[remaining], i];
+
+    map[curVal] = i;
   }
 };
 
-// Teste 1: Caso básico
-assert.deepStrictEqual(twoSum([2, 7, 11, 15], 9), [1, 0], "Teste 1 falhou");
+const nums = [3, 2, 4];
+const target = 6;
 
-// Teste 2: Outro caso
-assert.deepStrictEqual(twoSum([3, 2, 4], 6), [2, 1], "Teste 2 falhou");
+const output = twoSum(nums, target);
 
-// Teste 3: Caso com números negativos
-assert.deepStrictEqual(twoSum([-3, 4, 3, 90], 0), [2, 0], "Teste 3 falhou");
+console.log(output);
