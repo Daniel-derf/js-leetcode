@@ -1,7 +1,10 @@
 var reverseBetween = function (head, left, right) {
-  let node = head;
+  let dummy = new ListNode(0);
+  let node = dummy;
 
-  let i = 1;
+  dummy.next = head;
+
+  let i = 0;
 
   while (i < left - 1) {
     i++;
@@ -17,22 +20,9 @@ var reverseBetween = function (head, left, right) {
     afterNode = afterNode.next;
   }
 
-  if (left === 1) {
-    node = recursiveReverse(node, i, right, afterNode);
-    const newHead = node;
-
-    for (let i = 1; i < right; i++) {
-      node = node.next;
-    }
-
-    node.next = afterNode;
-
-    return newHead;
-  }
-
   node.next = recursiveReverse(node?.next, i + 1, right, afterNode);
 
-  let node2 = head;
+  let node2 = node.next;
 
   for (let i = 1; i < right; i++) {
     node2 = node2.next;
@@ -40,7 +30,7 @@ var reverseBetween = function (head, left, right) {
 
   node2.next = afterNode;
 
-  return head;
+  return dummy.next;
 };
 
 function recursiveReverse(head, cur_i, max_i) {
