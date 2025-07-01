@@ -7,8 +7,6 @@ var isSubsequence = function (s, t) {
   let [sPointer, tPointer] = [0, 0];
 
   while (t[tPointer] !== undefined) {
-    if (!s[sPointer]) return true;
-
     if (s[sPointer] === t[tPointer]) {
       sPointer++;
     }
@@ -16,7 +14,7 @@ var isSubsequence = function (s, t) {
     tPointer++;
   }
 
-  return false;
+  return s[sPointer] === undefined ? true : false;
 };
 
 const s = "abc";
