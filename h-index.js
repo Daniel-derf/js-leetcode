@@ -3,13 +3,19 @@
  * @return {number}
  */
 var hIndex = function (citations) {
-  for (let i = citations.length; i >= 0; i--) {
-    let sufficientCitations = 0;
+  citations.sort((a, b) => b - a); // Ordena do maior para o menor
 
-    for (let j = 0; j < citations.length; j++) {
-      if (citations[j] >= i) sufficientCitations += 1;
+  for (let i = 0; i < citations.length; i++) {
+    if (citations[i] < i + 1) {
+      return i;
     }
-
-    if (sufficientCitations >= i) return i;
   }
+
+  return citations.length;
 };
+
+const citations = [3, 0, 6, 1, 5];
+
+const output = hIndex(citations);
+
+console.log(output);
