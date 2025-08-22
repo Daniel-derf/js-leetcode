@@ -3,27 +3,23 @@
  * @return {number}
  */
 var maxProduct = function (nums) {
-  let res = Math.max(...nums);
+  let largestProduct = nums[0];
+  let min = 1,
+    max = 1;
 
-  let [maxVal, minVal] = [1, 1];
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i];
 
-  for (const num of nums) {
-    if (num === 0) {
-      [maxVal, minVal] = [1, 1];
-    }
+    max = Math.max(max * num, min * num, num);
+    min = Math.min(max * num, min * num, num);
 
-    const tmp = maxVal * num;
-
-    maxVal = Math.max(maxVal * num, minVal * num, num);
-    minVal = Math.min(tmp, minVal * num, num);
-
-    res = Math.max(res, maxVal);
+    largestProduct = Math.max(max, largestProduct);
   }
 
-  return res;
+  return largestProduct;
 };
 
-const nums = [2, 3, -2, 4];
+const nums = [-4, -3, -2];
 
 const output = maxProduct(nums);
 
